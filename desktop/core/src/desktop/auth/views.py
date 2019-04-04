@@ -261,6 +261,8 @@ def oauth_login(request):
 
   consumer = oauth.Consumer(OAUTH.CONSUMER_KEY.get(), OAUTH.CONSUMER_SECRET.get())
   client = oauth.Client(consumer)
+  print(consumer)
+  print(client)
   resp, content = client.request(OAUTH.REQUEST_TOKEN_URL.get(), "POST", body=urllib.urlencode({
                       'oauth_callback': 'http://' + request.get_host() + '/login/oauth_authenticated/'
                   }))
