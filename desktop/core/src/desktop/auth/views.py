@@ -19,7 +19,8 @@ try:
   import oauth2 as oauth
 except:
   oauth = None
-
+import os
+import ssl
 import cgi
 import logging
 import urllib
@@ -258,11 +259,11 @@ def _profile_dict(user):
 @login_notrequired
 def oauth_login(request):
   assert oauth is not None
-
+  if (not os.environ.get('PYTHONHTTPSVERIFY', '') and
+          getattr(ssl, '_create_unverified_context', None)):
+    ssl._create_default_https_context = ssl._create_unverified_context
   consumer = oauth.Consumer(OAUTH.CONSUMER_KEY.get(), OAUTH.CONSUMER_SECRET.get())
   client = oauth.Client(consumer)
-  print(consumer)
-  print(client)
   resp, content = client.request(OAUTH.REQUEST_TOKEN_URL.get(), "POST", body=urllib.urlencode({
                       'oauth_callback': 'http://' + request.get_host() + '/login/oauth_authenticated/'
                   }))
